@@ -15,21 +15,37 @@ app.post("/signup", async (req, res) => {
   const email = req.body.email;
   const password = await bcrypt.hash(req.body.password, salt);
 
-  await userRef
-    .add({
-      username: username,
-      password: password,
+  admin
+    .auth()
+    .createUser({
       email: email,
-      married_date: "",
-      created_at: new Date(),
-      updated_at: new Date()
+      password: password
     })
     .then(result => {
-      res.status(200).json({
-        error: false,
-        errorMessage: null,
-        data: { id: result.id }
-      });
+      userRef
+        .doc(result.uid)
+        .set({
+          username: username,
+          password: password,
+          email: email,
+          married_date: "",
+          created_at: new Date(),
+          updated_at: new Date()
+        })
+        .then(value => {
+          res.status(200).json({
+            error: false,
+            errorMessage: null,
+            data: { id: result.uid }
+          });
+        })
+        .catch(err => {
+          res.status(500).json({
+            error: true,
+            errorMessage: err,
+            data: {}
+          });
+        });
     })
     .catch(err => {
       res.status(500).json({
@@ -51,7 +67,7 @@ app.post("/signin", async (req, res) => {
       if (docQuery.size == 0) {
         return res.status(500).json({
           error: true,
-          errorMessage: "Incorrect Password !",
+          errorMessage: "Username is not exist !",
           data: []
         });
       } else {
