@@ -20,7 +20,9 @@ app.post("/signup", async (req, res) => {
       username: username,
       password: password,
       email: email,
-      married_date: ""
+      married_date: "",
+      created_at: new Date(),
+      updated_at: new Date()
     })
     .then(result => {
       res.status(200).json({
@@ -79,6 +81,104 @@ app.post("/signin", async (req, res) => {
         error: true,
         errorMessage: err,
         data: []
+      });
+    });
+});
+
+app.get("/users", (req, res) => {
+  userRef
+    .get()
+    .then(docQuery => {
+      let data = [];
+      docQuery.forEach(doc => {
+        data.push({
+          id: doc.id,
+          ...doc.data()
+        });
+        if (data.length === docQuery.size) {
+          res.status(200).json({
+            error: false,
+            errorMessage: null,
+            data: data
+          });
+        }
+      });
+    })
+    .catch(err => {
+      res.status(500).json({
+        error: true,
+        errorMessage: err,
+        data: {}
+      });
+    });
+});
+
+app.get("/users/:id", (req, res) => {
+  const userId = req.params.id;
+
+  userRef
+    .doc(userId)
+    .get()
+    .then(doc => {
+      res.status(200).json({
+        error: false,
+        errorMessage: null,
+        data: { id: doc.id, ...doc.data() }
+      });
+    })
+    .catch(err => {
+      res.status(500).json({
+        error: true,
+        errorMessage: err,
+        data: {}
+      });
+    });
+});
+
+app.put("/users/:id", (req, res) => {
+  const userId = req.params.id;
+  const marriedDate = req.body.married_date;
+
+  userRef
+    .doc(userId)
+    .update({
+      married_date: marriedDate,
+      updated_at: new Date()
+    })
+    .then(result => {
+      res.status(200).json({
+        error: false,
+        errorMessage: null,
+        data: { message: result.writeTime }
+      });
+    })
+    .catch(err => {
+      res.status(500).json({
+        error: true,
+        errorMessage: err,
+        data: {}
+      });
+    });
+});
+
+app.delete("/users/:id", (req, res) => {
+  const userId = req.params.id;
+
+  userRef
+    .doc(userId)
+    .delete()
+    .then(result => {
+      res.status(200).json({
+        error: false,
+        errorMessage: null,
+        data: { message: result.writeTime }
+      });
+    })
+    .catch(err => {
+      res.status(500).json({
+        error: true,
+        errorMessage: err,
+        data: {}
       });
     });
 });

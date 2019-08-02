@@ -10,3 +10,12 @@ Access API by opening https://us-central1-wedding-planner-64948.cloudfunctions.n
 | --------- | ---- | --------------- | ------------------------------- |
 | `/signup` | POST | Create New User | `username`,`email` , `password` |
 | `/signin` | POST | Login           | `username` , `password`         |
+
+### Users
+
+| Endpoint     | HTTP   | Description           | Body           |
+| ------------ | ------ | --------------------- | -------------- |
+| `/users/`    | GET    | Get All User          |                |
+| `/users/:id` | GET    | Get Detail User by ID |                |
+| `/users/:id` | PUT    | Update User by ID     | `married_date` |
+| `/users/:id` | DELETE | Delete User by ID     |                |
