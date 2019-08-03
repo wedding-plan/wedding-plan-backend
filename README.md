@@ -55,7 +55,7 @@ Access API by opening https://us-central1-wedding-planner-64948.cloudfunctions.n
 | `/categories/:id`      | PUT    | Update Categories by ID     | `title`,`content`             |
 | `/categories/:id`      | DELETE | Delete Categories by ID     |                               |
 
-### Todo
+### Check
 
 | Endpoint                 | HTTP   | Description                     | Body               |
 | ------------------------ | ------ | ------------------------------- | ------------------ |
