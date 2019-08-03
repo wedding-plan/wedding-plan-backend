@@ -14,6 +14,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(require("./controllers/users"));
 app.use(require("./controllers/tasks"));
+app.use(require("./controllers/category"));
 
 exports.v1 = functions.https.onRequest(app);
 

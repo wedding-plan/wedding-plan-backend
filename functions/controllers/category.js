@@ -2,16 +2,16 @@ const admin = require("firebase-admin");
 const express = require("express");
 
 const db = admin.firestore();
-const taskRef = db.collection("tasks");
+const categoryRef = db.collection("categories");
 
 const app = express.Router();
 
-app.post("/tasks", (req, res) => {
+app.post("/categories", (req, res) => {
   const title = req.body.title;
   const content = req.body.content;
   const userId = req.body.user_id;
 
-  taskRef
+  categoryRef
     .add({
       title: title,
       content: content,
@@ -35,11 +35,11 @@ app.post("/tasks", (req, res) => {
     });
 });
 
-app.get("/tasks", (req, res) => {
+app.get("/categories", (req, res) => {
   const userId = req.query.user_id;
 
   if (userId != undefined) {
-    taskRef
+    categoryRef
       .where("user_id", "==", userId)
       .get()
       .then(docQuery => {
@@ -66,7 +66,7 @@ app.get("/tasks", (req, res) => {
         });
       });
   } else {
-    taskRef
+    categoryRef
       .get()
       .then(docQuery => {
         let data = [];
@@ -94,11 +94,11 @@ app.get("/tasks", (req, res) => {
   }
 });
 
-app.get("/tasks/:id", (req, res) => {
-  const taksId = req.params.id;
+app.get("/categories/:id", (req, res) => {
+  const categoriesId = req.params.id;
 
-  taskRef
-    .doc(taksId)
+  categoryRef
+    .doc(categoriesId)
     .get()
     .then(doc => {
       res.status(200).json({
@@ -116,13 +116,13 @@ app.get("/tasks/:id", (req, res) => {
     });
 });
 
-app.put("/tasks/:id", (req, res) => {
-  const taskId = req.params.id;
+app.put("/categories/:id", (req, res) => {
+  const categoriesId = req.params.id;
   const title = req.body.title;
   const content = req.body.content;
 
-  taskRef
-    .doc(taskId)
+  categoryRef
+    .doc(categoriesId)
     .update({
       title: title,
       content: content,
@@ -144,11 +144,11 @@ app.put("/tasks/:id", (req, res) => {
     });
 });
 
-app.delete("/tasks/:id", (req, res) => {
-  const tasksId = req.params.id;
+app.delete("/categories/:id", (req, res) => {
+  const categoriesId = req.params.id;
 
-  taskRef
-    .doc(tasksId)
+  categoryRef
+    .doc(categoriesId)
     .delete()
     .then(result => {
       res.status(200).json({
