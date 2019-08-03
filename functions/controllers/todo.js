@@ -2,20 +2,21 @@ const admin = require("firebase-admin");
 const express = require("express");
 
 const db = admin.firestore();
-const taskRef = db.collection("tasks");
+const todoRef = db.collection("todos");
 
 const app = express.Router();
 
-app.post("/tasks", (req, res) => {
+app.post("/todo/:task_id", (req, res) => {
   const title = req.body.title;
   const content = req.body.content;
-  const userId = req.body.user_id;
+  const taskId = req.params.task_id;
 
-  taskRef
+  todoRef
     .add({
       title: title,
       content: content,
-      user_id: userId,
+      task_id: taskId,
+      is_complete: false,
       created_at: new Date(),
       updated_at: new Date()
     })
@@ -35,12 +36,12 @@ app.post("/tasks", (req, res) => {
     });
 });
 
-app.get("/tasks", (req, res) => {
-  const userId = req.query.user_id;
+app.get("/todo", (req, res) => {
+  const taskId = req.query.task_id;
 
-  if (userId != undefined) {
-    taskRef
-      .where("user_id", "==", userId)
+  if (taskId != undefined) {
+    todoRef
+      .where("task_id", "==", taskId)
       .get()
       .then(docQuery => {
         if (docQuery.size === 0) {
@@ -73,7 +74,7 @@ app.get("/tasks", (req, res) => {
         });
       });
   } else {
-    taskRef
+    todoRef
       .get()
       .then(docQuery => {
         let data = [];
@@ -101,11 +102,11 @@ app.get("/tasks", (req, res) => {
   }
 });
 
-app.get("/tasks/:id", (req, res) => {
-  const taksId = req.params.id;
+app.get("/todo/:id", (req, res) => {
+  const todoId = req.params.id;
 
-  taskRef
-    .doc(taksId)
+  todoRef
+    .doc(todoId)
     .get()
     .then(doc => {
       res.status(200).json({
@@ -123,13 +124,13 @@ app.get("/tasks/:id", (req, res) => {
     });
 });
 
-app.put("/tasks/:id", (req, res) => {
-  const taskId = req.params.id;
+app.put("/todo/:id", (req, res) => {
+  const todoId = req.params.id;
   const title = req.body.title;
   const content = req.body.content;
 
-  taskRef
-    .doc(taskId)
+  todoRef
+    .doc(todoId)
     .update({
       title: title,
       content: content,
@@ -151,11 +152,59 @@ app.put("/tasks/:id", (req, res) => {
     });
 });
 
-app.delete("/tasks/:id", (req, res) => {
-  const tasksId = req.params.id;
+app.put("/todo/:id/checklist", (req, res) => {
+  const todoId = req.params.id;
 
-  taskRef
-    .doc(tasksId)
+  todoRef
+    .doc(todoId)
+    .update({
+      is_complete: true
+    })
+    .then(result => {
+      res.status(200).json({
+        error: false,
+        errorMessage: null,
+        data: { message: result.writeTime }
+      });
+    })
+    .catch(err => {
+      res.status(500).json({
+        error: true,
+        errorMessage: err,
+        data: {}
+      });
+    });
+});
+
+app.put("/todo/:id/unchecklist", (req, res) => {
+  const todoId = req.params.id;
+
+  todoRef
+    .doc(todoId)
+    .update({
+      is_complete: false
+    })
+    .then(result => {
+      res.status(200).json({
+        error: false,
+        errorMessage: null,
+        data: { message: result.writeTime }
+      });
+    })
+    .catch(err => {
+      res.status(500).json({
+        error: true,
+        errorMessage: err,
+        data: {}
+      });
+    });
+});
+
+app.delete("/todo/:id", (req, res) => {
+  const todoId = req.params.id;
+
+  todoRef
+    .doc(todoId)
     .delete()
     .then(result => {
       res.status(200).json({

@@ -43,6 +43,13 @@ app.get("/categories", (req, res) => {
       .where("user_id", "==", userId)
       .get()
       .then(docQuery => {
+        if (docQuery.size === 0) {
+          res.status(200).json({
+            error: false,
+            errorMessage: null,
+            data: []
+          });
+        }
         let data = [];
         docQuery.forEach(doc => {
           data.push({
