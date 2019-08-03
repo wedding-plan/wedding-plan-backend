@@ -54,3 +54,16 @@ Access API by opening https://us-central1-wedding-planner-64948.cloudfunctions.n
 | `/categories/:id`      | GET    | Get Detail Categories by ID |                               |
 | `/categories/:id`      | PUT    | Update Categories by ID     | `title`,`content`             |
 | `/categories/:id`      | DELETE | Delete Categories by ID     |                               |
+
+### Todo
+
+| Endpoint                 | HTTP   | Description                     | Body               |
+| ------------------------ | ------ | ------------------------------- | ------------------ |
+| `/check/:category_id`    | POST   | Create New Check by Category Id | `title`, `content` |
+| `/check/`                | GET    | Get All Check                   |                    |
+| `/check?category_id=`    | GET    | Get User Check by Category ID   |                    |
+| `/check/:id`             | GET    | Get Detail Check by ID          |                    |
+| `/check/:id`             | PUT    | Update Check by ID              | `title`,`content`  |
+| `/check/:id/checklist`   | PUT    | To Complete a Check             |                    |
+| `/check/:id/unchecklist` | PUT    | To Uncomplete a Check           |                    |
+| `/check/:id`             | DELETE | Delete Check by ID              |                    |
