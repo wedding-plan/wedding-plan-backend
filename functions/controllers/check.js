@@ -6,24 +6,42 @@ const checkRef = db.collection("check");
 
 const app = express.Router();
 
+const sortData = (a, b) => {
+  return a.index - b.index;
+};
+
 app.post("/check/:category_id", (req, res) => {
   const title = req.body.title;
   const category_id = req.params.category_id;
 
   checkRef
-    .add({
-      title: title,
-      category_id: category_id,
-      is_complete: false,
-      created_at: new Date(),
-      updated_at: new Date()
-    })
-    .then(result => {
-      res.status(200).json({
-        error: false,
-        errorMessage: null,
-        data: result.id
-      });
+    .where("category_id", "==", category_id)
+    .get()
+    .then(docQuery => {
+      const index = docQuery.size + 1;
+      checkRef
+        .add({
+          title: title,
+          category_id: category_id,
+          is_complete: false,
+          index: index,
+          created_at: new Date(),
+          updated_at: new Date()
+        })
+        .then(result => {
+          res.status(200).json({
+            error: false,
+            errorMessage: null,
+            data: result.id
+          });
+        })
+        .catch(err => {
+          res.status(500).json({
+            error: true,
+            errorMessage: err,
+            data: {}
+          });
+        });
     })
     .catch(err => {
       res.status(500).json({
@@ -59,7 +77,7 @@ app.get("/check", (req, res) => {
             res.status(200).json({
               error: false,
               errorMessage: null,
-              data: data
+              data: data.sort(sortData)
             });
           }
         });
@@ -92,7 +110,7 @@ app.get("/check", (req, res) => {
             res.status(200).json({
               error: false,
               errorMessage: null,
-              data: data
+              data: data.sort(sortData)
             });
           }
         });

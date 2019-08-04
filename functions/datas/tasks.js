@@ -248,7 +248,7 @@ module.exports = [
         title: "Lakukan perawatan pre‐wedding lengkap (lulur, spa, ratus, dsb)"
       },
       {
-        index: 9,
+        index: 8,
         title:
           "Beli bingkisan ucapan terima kasih untuk orang yang banyak membantu Anda atau orangtua Anda"
       }

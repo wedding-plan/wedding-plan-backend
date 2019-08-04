@@ -63,7 +63,7 @@ exports.createUserAccount = functions.auth.user().onCreate(user => {
                 .add({
                   index: items.index,
                   item: items.title,
-                  tasks_id: result.id,
+                  task_id: result.id,
                   is_complete: false,
                   created_at: new Date(),
                   updated_at: new Date()
@@ -101,7 +101,7 @@ exports.createUserAccount = functions.auth.user().onCreate(user => {
                 .add({
                   index: items.index,
                   item: items.title,
-                  tasks_id: result.id,
+                  category_id: result.id,
                   is_complete: false,
                   created_at: new Date(),
                   updated_at: new Date()

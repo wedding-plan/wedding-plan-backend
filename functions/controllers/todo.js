@@ -6,24 +6,42 @@ const todoRef = db.collection("todos");
 
 const app = express.Router();
 
+const sortData = (a, b) => {
+  return a.index - b.index;
+};
+
 app.post("/todo/:task_id", (req, res) => {
   const title = req.body.title;
   const taskId = req.params.task_id;
 
   todoRef
-    .add({
-      title: title,
-      task_id: taskId,
-      is_complete: false,
-      created_at: new Date(),
-      updated_at: new Date()
-    })
-    .then(result => {
-      res.status(200).json({
-        error: false,
-        errorMessage: null,
-        data: result.id
-      });
+    .where("task_id", "==", taskId)
+    .get()
+    .then(docQuery => {
+      const index = docQuery.size + 1;
+      todoRef
+        .add({
+          title: title,
+          task_id: taskId,
+          index: index,
+          is_complete: false,
+          created_at: new Date(),
+          updated_at: new Date()
+        })
+        .then(result => {
+          res.status(200).json({
+            error: false,
+            errorMessage: null,
+            data: result.id
+          });
+        })
+        .catch(err => {
+          res.status(500).json({
+            error: true,
+            errorMessage: err,
+            data: {}
+          });
+        });
     })
     .catch(err => {
       res.status(500).json({
@@ -59,7 +77,7 @@ app.get("/todo", (req, res) => {
             res.status(200).json({
               error: false,
               errorMessage: null,
-              data: data
+              data: data.sort(sortData)
             });
           }
         });
@@ -92,7 +110,7 @@ app.get("/todo", (req, res) => {
             res.status(200).json({
               error: false,
               errorMessage: null,
-              data: data
+              data: data.sort(sortData)
             });
           }
         });

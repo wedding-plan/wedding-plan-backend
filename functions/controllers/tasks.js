@@ -6,23 +6,41 @@ const taskRef = db.collection("tasks");
 
 const app = express.Router();
 
+const sortData = (a, b) => {
+  return a.index - b.index;
+};
+
 app.post("/tasks", (req, res) => {
   const title = req.body.title;
   const userId = req.body.user_id;
 
   taskRef
-    .add({
-      title: title,
-      user_id: userId,
-      created_at: new Date(),
-      updated_at: new Date()
-    })
-    .then(result => {
-      res.status(200).json({
-        error: false,
-        errorMessage: null,
-        data: result.id
-      });
+    .where("user_id", "==", userId)
+    .get()
+    .then(docQuery => {
+      const index = docQuery.size + 1;
+      taskRef
+        .add({
+          title: title,
+          user_id: userId,
+          index: index,
+          created_at: new Date(),
+          updated_at: new Date()
+        })
+        .then(result => {
+          res.status(200).json({
+            error: false,
+            errorMessage: null,
+            data: result.id
+          });
+        })
+        .catch(err => {
+          res.status(500).json({
+            error: true,
+            errorMessage: err,
+            data: {}
+          });
+        });
     })
     .catch(err => {
       res.status(500).json({
@@ -58,7 +76,7 @@ app.get("/tasks", (req, res) => {
             res.status(200).json({
               error: false,
               errorMessage: null,
-              data: data
+              data: data.sort(sortData)
             });
           }
         });
@@ -91,7 +109,7 @@ app.get("/tasks", (req, res) => {
             res.status(200).json({
               error: false,
               errorMessage: null,
-              data: data
+              data: data.sort(sortData)
             });
           }
         });
