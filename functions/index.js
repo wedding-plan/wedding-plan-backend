@@ -20,36 +20,104 @@ app.use(require("./controllers/check"));
 
 exports.v1 = functions.https.onRequest(app);
 
+const tasks = require("./datas/tasks");
+const category = require("./datas/category");
+
 // ================ handle trigger functions ================
 exports.createUserAccount = functions.auth.user().onCreate(user => {
   const userID = user.uid;
   const email = user.email;
-  const photoURL = user.photoURL;
   const name = user.displayName;
-  const phone = user.phoneNumber;
-  const verified = user.emailVerified;
 
   return admin
     .firestore()
     .collection("users")
-    .doc(`${userID}`)
+    .doc(userID)
     .set({
+      username: name,
+      password: user.passwordHash,
       email: email,
-      password: "",
-      bod: "",
-      firstname: name,
-      lastname: "",
-      avatar: photoURL,
-      phone: phone,
-      is_verified: verified,
-      is_active: true,
-      quotes: "",
-      favorites: [],
+      married_date: "",
       created_at: new Date(),
       updated_at: new Date()
     })
     .then(docRef => {
       console.log("success create user =>", docRef);
+      //tasks
+      tasks.forEach(item => {
+        admin
+          .firestore()
+          .collection("tasks")
+          .add({
+            index: item.index,
+            title: item.title,
+            user_id: userID,
+            created_at: new Date(),
+            updated_at: new Date()
+          })
+          .then(result => {
+            item.todo.forEach(items => {
+              admin
+                .firestore()
+                .collection("todos")
+                .add({
+                  index: items.index,
+                  item: items.title,
+                  tasks_id: result.id,
+                  is_complete: false,
+                  created_at: new Date(),
+                  updated_at: new Date()
+                })
+                .then(result => {
+                  console.log(result.id);
+                })
+                .catch(err => {
+                  console.log(err);
+                });
+            });
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      });
+
+      // category
+      category.forEach(item => {
+        admin
+          .firestore()
+          .collection("categories")
+          .add({
+            index: item.index,
+            title: item.title,
+            user_id: userID,
+            created_at: new Date(),
+            updated_at: new Date()
+          })
+          .then(result => {
+            item.check.forEach(items => {
+              admin
+                .firestore()
+                .collection("check")
+                .add({
+                  index: items.index,
+                  item: items.title,
+                  tasks_id: result.id,
+                  is_complete: false,
+                  created_at: new Date(),
+                  updated_at: new Date()
+                })
+                .then(result => {
+                  console.log(result.id);
+                })
+                .catch(err => {
+                  console.log(err);
+                });
+            });
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      });
     })
     .catch(error => {
       console.error("Error while creating => ", error);
