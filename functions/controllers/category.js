@@ -8,13 +8,11 @@ const app = express.Router();
 
 app.post("/categories", (req, res) => {
   const title = req.body.title;
-  const content = req.body.content;
   const userId = req.body.user_id;
 
   categoryRef
     .add({
       title: title,
-      content: content,
       user_id: userId,
       created_at: new Date(),
       updated_at: new Date()
@@ -133,13 +131,11 @@ app.get("/categories/:id", (req, res) => {
 app.put("/categories/:id", (req, res) => {
   const categoriesId = req.params.id;
   const title = req.body.title;
-  const content = req.body.content;
 
   categoryRef
     .doc(categoriesId)
     .update({
       title: title,
-      content: content,
       updated_at: new Date()
     })
     .then(result => {

@@ -11,7 +11,7 @@ app.post("/signup", async (req, res) => {
   const SALT_WORK_FACTOR = 2;
   const salt = await bcrypt.genSalt(SALT_WORK_FACTOR);
 
-  const username = req.body.username;
+  // const username = req.body.username;
   const email = req.body.email;
   const password = await bcrypt.hash(req.body.password, salt);
 
@@ -22,30 +22,11 @@ app.post("/signup", async (req, res) => {
       password: password
     })
     .then(result => {
-      userRef
-        .doc(result.uid)
-        .set({
-          username: username,
-          password: password,
-          email: email,
-          married_date: "",
-          created_at: new Date(),
-          updated_at: new Date()
-        })
-        .then(value => {
-          res.status(200).json({
-            error: false,
-            errorMessage: null,
-            data: { id: result.uid }
-          });
-        })
-        .catch(err => {
-          res.status(500).json({
-            error: true,
-            errorMessage: err,
-            data: {}
-          });
-        });
+      res.status(200).json({
+        error: false,
+        errorMessage: null,
+        data: { id: result.uid }
+      });
     })
     .catch(err => {
       res.status(500).json({
@@ -57,17 +38,17 @@ app.post("/signup", async (req, res) => {
 });
 
 app.post("/signin", async (req, res) => {
-  const username = req.body.username;
+  const email = req.body.email;
   const password = req.body.password;
 
   await userRef
-    .where("username", "==", username)
+    .where("email", "==", email)
     .get()
     .then(docQuery => {
       if (docQuery.size == 0) {
         return res.status(500).json({
           error: true,
-          errorMessage: "Username is not exist !",
+          errorMessage: "Email is not exist !",
           data: []
         });
       } else {

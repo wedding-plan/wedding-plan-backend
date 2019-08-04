@@ -8,13 +8,11 @@ const app = express.Router();
 
 app.post("/check/:category_id", (req, res) => {
   const title = req.body.title;
-  const content = req.body.content;
   const category_id = req.params.category_id;
 
   checkRef
     .add({
       title: title,
-      content: content,
       category_id: category_id,
       is_complete: false,
       created_at: new Date(),
@@ -134,13 +132,11 @@ app.get("/check/:id", (req, res) => {
 app.put("/check/:id", (req, res) => {
   const checkId = req.params.id;
   const title = req.body.title;
-  const content = req.body.content;
 
   checkRef
     .doc(checkId)
     .update({
       title: title,
-      content: content,
       updated_at: new Date()
     })
     .then(result => {

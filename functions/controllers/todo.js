@@ -8,13 +8,11 @@ const app = express.Router();
 
 app.post("/todo/:task_id", (req, res) => {
   const title = req.body.title;
-  const content = req.body.content;
   const taskId = req.params.task_id;
 
   todoRef
     .add({
       title: title,
-      content: content,
       task_id: taskId,
       is_complete: false,
       created_at: new Date(),
@@ -134,13 +132,11 @@ app.get("/todo/:id", (req, res) => {
 app.put("/todo/:id", (req, res) => {
   const todoId = req.params.id;
   const title = req.body.title;
-  const content = req.body.content;
 
   todoRef
     .doc(todoId)
     .update({
       title: title,
-      content: content,
       updated_at: new Date()
     })
     .then(result => {
