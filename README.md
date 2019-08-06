@@ -13,12 +13,12 @@ Access API by opening https://us-central1-wedding-planner-64948.cloudfunctions.n
 
 ### Users
 
-| Endpoint     | HTTP   | Description           | Body           |
-| ------------ | ------ | --------------------- | -------------- |
-| `/users/`    | GET    | Get All User          |                |
-| `/users/:id` | GET    | Get Detail User by ID |                |
-| `/users/:id` | PUT    | Update User by ID     | `married_date` |
-| `/users/:id` | DELETE | Delete User by ID     |                |
+| Endpoint     | HTTP   | Description           | Body                                |
+| ------------ | ------ | --------------------- | ----------------------------------- |
+| `/users/`    | GET    | Get All User          |                                     |
+| `/users/:id` | GET    | Get Detail User by ID |                                     |
+| `/users/:id` | PUT    | Update User by ID     | `name`,`couple_name`,`married_date` |
+| `/users/:id` | DELETE | Delete User by ID     |                                     |
 
 ### Tasks
 

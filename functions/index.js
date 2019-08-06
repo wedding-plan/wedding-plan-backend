@@ -34,7 +34,8 @@ exports.createUserAccount = functions.auth.user().onCreate(user => {
     .collection("users")
     .doc(userID)
     .set({
-      username: name,
+      name: name,
+      couple_name: "",
       password: user.passwordHash,
       email: email,
       married_date: "",

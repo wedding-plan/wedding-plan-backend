@@ -135,10 +135,14 @@ app.get("/users/:id", (req, res) => {
 app.put("/users/:id", (req, res) => {
   const userId = req.params.id;
   const marriedDate = req.body.married_date;
+  const name = req.body.name;
+  const coupleName = req.body.couple_name;
 
   userRef
     .doc(userId)
     .update({
+      name: name,
+      couple_name: coupleName,
       married_date: marriedDate,
       updated_at: new Date()
     })
