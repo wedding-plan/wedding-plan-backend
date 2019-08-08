@@ -11,7 +11,7 @@ const sortData = (a, b) => {
 };
 
 app.post("/todo/:task_id", (req, res) => {
-  const title = req.body.title;
+  const item = req.body.item;
   const taskId = req.params.task_id;
 
   todoRef
@@ -21,7 +21,7 @@ app.post("/todo/:task_id", (req, res) => {
       const index = docQuery.size + 1;
       todoRef
         .add({
-          title: title,
+          item: item,
           task_id: taskId,
           index: index,
           is_complete: false,
@@ -149,12 +149,12 @@ app.get("/todo/:id", (req, res) => {
 
 app.put("/todo/:id", (req, res) => {
   const todoId = req.params.id;
-  const title = req.body.title;
+  const item = req.body.item;
 
   todoRef
     .doc(todoId)
     .update({
-      title: title,
+      item: item,
       updated_at: new Date()
     })
     .then(result => {

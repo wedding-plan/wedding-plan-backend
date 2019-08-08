@@ -11,7 +11,7 @@ const sortData = (a, b) => {
 };
 
 app.post("/check/:category_id", (req, res) => {
-  const title = req.body.title;
+  const item = req.body.item;
   const category_id = req.params.category_id;
 
   checkRef
@@ -21,7 +21,7 @@ app.post("/check/:category_id", (req, res) => {
       const index = docQuery.size + 1;
       checkRef
         .add({
-          title: title,
+          item: item,
           category_id: category_id,
           is_complete: false,
           index: index,
@@ -149,12 +149,12 @@ app.get("/check/:id", (req, res) => {
 
 app.put("/check/:id", (req, res) => {
   const checkId = req.params.id;
-  const title = req.body.title;
+  const item = req.body.item;
 
   checkRef
     .doc(checkId)
     .update({
-      title: title,
+      item: item,
       updated_at: new Date()
     })
     .then(result => {

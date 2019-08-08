@@ -33,16 +33,16 @@ Access API by opening https://us-central1-wedding-planner-64948.cloudfunctions.n
 
 ### Todo
 
-| Endpoint                | HTTP   | Description                | Body    |
-| ----------------------- | ------ | -------------------------- | ------- |
-| `/todo/:task_id`        | POST   | Create New Todo by Task Id | `title` |
-| `/todo/`                | GET    | Get All Todo               |         |
-| `/todo?task_id=`        | GET    | Get User Todo by Task ID   |         |
-| `/todo/:id`             | GET    | Get Detail Todo by ID      |         |
-| `/todo/:id`             | PUT    | Update Todo by ID          | `title` |
-| `/todo/:id/checklist`   | PUT    | To Complete a Todo         |         |
-| `/todo/:id/unchecklist` | PUT    | To Uncomplete a Todo       |         |
-| `/todo/:id`             | DELETE | Delete Todo by ID          |         |
+| Endpoint                | HTTP   | Description                | Body   |
+| ----------------------- | ------ | -------------------------- | ------ |
+| `/todo/:task_id`        | POST   | Create New Todo by Task Id | `item` |
+| `/todo/`                | GET    | Get All Todo               |        |
+| `/todo?task_id=`        | GET    | Get User Todo by Task ID   |        |
+| `/todo/:id`             | GET    | Get Detail Todo by ID      |        |
+| `/todo/:id`             | PUT    | Update Todo by ID          | `item` |
+| `/todo/:id/checklist`   | PUT    | To Complete a Todo         |        |
+| `/todo/:id/unchecklist` | PUT    | To Uncomplete a Todo       |        |
+| `/todo/:id`             | DELETE | Delete Todo by ID          |        |
 
 ### Categories
 
@@ -57,13 +57,13 @@ Access API by opening https://us-central1-wedding-planner-64948.cloudfunctions.n
 
 ### Check
 
-| Endpoint                 | HTTP   | Description                     | Body    |
-| ------------------------ | ------ | ------------------------------- | ------- |
-| `/check/:category_id`    | POST   | Create New Check by Category Id | `title` |
-| `/check/`                | GET    | Get All Check                   |         |
-| `/check?category_id=`    | GET    | Get User Check by Category ID   |         |
-| `/check/:id`             | GET    | Get Detail Check by ID          |         |
-| `/check/:id`             | PUT    | Update Check by ID              | `title` |
-| `/check/:id/checklist`   | PUT    | To Complete a Check             |         |
-| `/check/:id/unchecklist` | PUT    | To Uncomplete a Check           |         |
-| `/check/:id`             | DELETE | Delete Check by ID              |         |
+| Endpoint                 | HTTP   | Description                     | Body   |
+| ------------------------ | ------ | ------------------------------- | ------ |
+| `/check/:category_id`    | POST   | Create New Check by Category Id | `item` |
+| `/check/`                | GET    | Get All Check                   |        |
+| `/check?category_id=`    | GET    | Get User Check by Category ID   |        |
+| `/check/:id`             | GET    | Get Detail Check by ID          |        |
+| `/check/:id`             | PUT    | Update Check by ID              | `item` |
+| `/check/:id/checklist`   | PUT    | To Complete a Check             |        |
+| `/check/:id/unchecklist` | PUT    | To Uncomplete a Check           |        |
+| `/check/:id`             | DELETE | Delete Check by ID              |        |
