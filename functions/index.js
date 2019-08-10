@@ -42,10 +42,10 @@ exports.createUserAccount = functions.auth.user().onCreate(user => {
       created_at: new Date(),
       updated_at: new Date()
     })
-    .then(docRef => {
+    .then( async docRef => {
       console.log("success create user =>", docRef);
       //tasks
-      tasks.forEach(item => {
+      await tasks.forEach(item => {
         admin
           .firestore()
           .collection("tasks")
@@ -83,7 +83,7 @@ exports.createUserAccount = functions.auth.user().onCreate(user => {
       });
 
       // category
-      category.forEach(item => {
+      await category.forEach(item => {
         admin
           .firestore()
           .collection("categories")
