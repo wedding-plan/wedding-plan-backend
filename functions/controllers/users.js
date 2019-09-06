@@ -2,6 +2,8 @@ const admin = require("firebase-admin");
 const express = require("express");
 const bcrypt = require("bcryptjs");
 
+const { sendResponse } = require("../helpers/index");
+
 const db = admin.firestore();
 const userRef = db.collection("users");
 
@@ -11,7 +13,6 @@ app.post("/signup", async (req, res) => {
   const SALT_WORK_FACTOR = 2;
   const salt = await bcrypt.genSalt(SALT_WORK_FACTOR);
 
-  // const username = req.body.username;
   const email = req.body.email;
   const password = await bcrypt.hash(req.body.password, salt);
 
@@ -22,18 +23,10 @@ app.post("/signup", async (req, res) => {
       password: password
     })
     .then(result => {
-      res.status(200).json({
-        error: false,
-        errorMessage: null,
-        data: { id: result.uid }
-      });
+      sendResponse(res, 200, false, null, { id: result.uid });
     })
     .catch(err => {
-      res.status(500).json({
-        error: true,
-        errorMessage: err,
-        data: {}
-      });
+      sendResponse(res, 500, true, err, {});
     });
 });
 
@@ -46,11 +39,7 @@ app.post("/signin", async (req, res) => {
     .get()
     .then(docQuery => {
       if (docQuery.size == 0) {
-        return res.status(500).json({
-          error: true,
-          errorMessage: "Email is not exist !",
-          data: []
-        });
+        return sendResponse(res, 500, true, "Email is not exist !", {});
       } else {
         docQuery.forEach(async doc => {
           const validPassword = await bcrypt.compare(
@@ -58,27 +47,18 @@ app.post("/signin", async (req, res) => {
             doc.data().password
           );
           if (!validPassword) {
-            return res.status(500).json({
-              error: true,
-              errorMessage: "Incorrect Password !",
-              data: []
-            });
+            return sendResponse(res, 500, true, "Incorrect Password !", {});
           } else {
-            return res.status(200).json({
-              error: false,
-              errorMessage: null,
-              data: { id: doc.id, ...doc.data() }
+            return sendResponse(res, 200, false, null, {
+              id: doc.id,
+              ...doc.data()
             });
           }
         });
       }
     })
     .catch(err => {
-      res.status(500).json({
-        error: true,
-        errorMessage: err,
-        data: []
-      });
+      sendResponse(res, 500, true, err, {});
     });
 });
 
@@ -93,20 +73,12 @@ app.get("/users", (req, res) => {
           ...doc.data()
         });
         if (data.length === docQuery.size) {
-          res.status(200).json({
-            error: false,
-            errorMessage: null,
-            data: data
-          });
+          sendResponse(res, 200, false, null, data);
         }
       });
     })
     .catch(err => {
-      res.status(500).json({
-        error: true,
-        errorMessage: err,
-        data: {}
-      });
+      sendResponse(res, 500, true, err, {});
     });
 });
 
@@ -117,18 +89,13 @@ app.get("/users/:id", (req, res) => {
     .doc(userId)
     .get()
     .then(doc => {
-      res.status(200).json({
-        error: false,
-        errorMessage: null,
-        data: { id: doc.id, ...doc.data() }
+      sendResponse(res, 200, false, null, {
+        id: doc.id,
+        ...doc.data()
       });
     })
     .catch(err => {
-      res.status(500).json({
-        error: true,
-        errorMessage: err,
-        data: {}
-      });
+      sendResponse(res, 500, true, err, {});
     });
 });
 
@@ -147,18 +114,12 @@ app.put("/users/:id", (req, res) => {
       updated_at: new Date()
     })
     .then(result => {
-      res.status(200).json({
-        error: false,
-        errorMessage: null,
-        data: { message: result.writeTime }
+      sendResponse(res, 200, false, null, {
+        msg: `Successfully updated => ${result.writeTime}`
       });
     })
     .catch(err => {
-      res.status(500).json({
-        error: true,
-        errorMessage: err,
-        data: {}
-      });
+      sendResponse(res, 500, true, err, {});
     });
 });
 
@@ -169,18 +130,12 @@ app.delete("/users/:id", (req, res) => {
     .doc(userId)
     .delete()
     .then(result => {
-      res.status(200).json({
-        error: false,
-        errorMessage: null,
-        data: { message: result.writeTime }
+      sendResponse(res, 200, false, null, {
+        msg: `Successfully deleted => ${result.writeTime}`
       });
     })
     .catch(err => {
-      res.status(500).json({
-        error: true,
-        errorMessage: err,
-        data: {}
-      });
+      sendResponse(res, 500, true, err, {});
     });
 });
 
