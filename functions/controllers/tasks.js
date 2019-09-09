@@ -1,6 +1,8 @@
 const admin = require("firebase-admin");
 const express = require("express");
 
+const { sendResponse } = require("../helpers/index");
+
 const db = admin.firestore();
 const taskRef = db.collection("tasks");
 
@@ -28,26 +30,14 @@ app.post("/tasks", (req, res) => {
           updated_at: new Date()
         })
         .then(result => {
-          res.status(200).json({
-            error: false,
-            errorMessage: null,
-            data: result.id
-          });
+          sendResponse(res, 200, false, null, result.id);
         })
         .catch(err => {
-          res.status(500).json({
-            error: true,
-            errorMessage: err,
-            data: {}
-          });
+          sendResponse(res, 500, true, err, {});
         });
     })
     .catch(err => {
-      res.status(500).json({
-        error: true,
-        errorMessage: err,
-        data: {}
-      });
+      sendResponse(res, 500, true, err, {});
     });
 });
 
@@ -60,11 +50,7 @@ app.get("/tasks", (req, res) => {
       .get()
       .then(docQuery => {
         if (docQuery.size === 0) {
-          res.status(200).json({
-            error: false,
-            errorMessage: null,
-            data: []
-          });
+          sendResponse(res, 200, false, null, []);
         }
         let data = [];
         docQuery.forEach(doc => {
@@ -73,31 +59,19 @@ app.get("/tasks", (req, res) => {
             ...doc.data()
           });
           if (data.length === docQuery.size) {
-            res.status(200).json({
-              error: false,
-              errorMessage: null,
-              data: data.sort(sortData)
-            });
+            sendResponse(res, 200, false, null, data.sort(sortData));
           }
         });
       })
       .catch(err => {
-        res.status(500).json({
-          error: true,
-          errorMessage: err,
-          data: {}
-        });
+        sendResponse(res, 500, true, err, {});
       });
   } else {
     taskRef
       .get()
       .then(docQuery => {
         if (docQuery.size === 0) {
-          res.status(200).json({
-            error: false,
-            errorMessage: null,
-            data: []
-          });
+          sendResponse(res, 200, false, null, []);
         }
         let data = [];
         docQuery.forEach(doc => {
@@ -106,20 +80,12 @@ app.get("/tasks", (req, res) => {
             ...doc.data()
           });
           if (data.length === docQuery.size) {
-            res.status(200).json({
-              error: false,
-              errorMessage: null,
-              data: data.sort(sortData)
-            });
+            sendResponse(res, 200, false, null, data.sort(sortData));
           }
         });
       })
       .catch(err => {
-        res.status(500).json({
-          error: true,
-          errorMessage: err,
-          data: {}
-        });
+        sendResponse(res, 500, true, err, {});
       });
   }
 });
@@ -131,18 +97,10 @@ app.get("/tasks/:id", (req, res) => {
     .doc(taksId)
     .get()
     .then(doc => {
-      res.status(200).json({
-        error: false,
-        errorMessage: null,
-        data: { id: doc.id, ...doc.data() }
-      });
+      sendResponse(res, 200, false, null, { id: doc.id, ...doc.data() });
     })
     .catch(err => {
-      res.status(500).json({
-        error: true,
-        errorMessage: err,
-        data: {}
-      });
+      sendResponse(res, 500, true, err, {});
     });
 });
 
@@ -157,18 +115,10 @@ app.put("/tasks/:id", (req, res) => {
       updated_at: new Date()
     })
     .then(result => {
-      res.status(200).json({
-        error: false,
-        errorMessage: null,
-        data: { message: result.writeTime }
-      });
+      sendResponse(res, 200, false, null, { message: result.writeTime });
     })
     .catch(err => {
-      res.status(500).json({
-        error: true,
-        errorMessage: err,
-        data: {}
-      });
+      sendResponse(res, 500, true, err, {});
     });
 });
 
@@ -179,18 +129,10 @@ app.delete("/tasks/:id", (req, res) => {
     .doc(tasksId)
     .delete()
     .then(result => {
-      res.status(200).json({
-        error: false,
-        errorMessage: null,
-        data: { message: result.writeTime }
-      });
+      sendResponse(res, 200, false, null, { message: result.writeTime });
     })
     .catch(err => {
-      res.status(500).json({
-        error: true,
-        errorMessage: err,
-        data: {}
-      });
+      sendResponse(res, 500, true, err, {});
     });
 });
 
