@@ -1,6 +1,8 @@
 const admin = require("firebase-admin");
 const express = require("express");
 
+const { sendResponse } = require("../helpers/index");
+
 const db = admin.firestore();
 const todoRef = db.collection("todos");
 
@@ -29,26 +31,14 @@ app.post("/todo/:task_id", (req, res) => {
           updated_at: new Date()
         })
         .then(result => {
-          res.status(200).json({
-            error: false,
-            errorMessage: null,
-            data: result.id
-          });
+          sendResponse(res, 200, false, null, { id: result.uid });
         })
         .catch(err => {
-          res.status(500).json({
-            error: true,
-            errorMessage: err,
-            data: {}
-          });
+          sendResponse(res, 500, true, err, {});
         });
     })
     .catch(err => {
-      res.status(500).json({
-        error: true,
-        errorMessage: err,
-        data: {}
-      });
+      sendResponse(res, 500, true, err, {});
     });
 });
 
@@ -61,11 +51,7 @@ app.get("/todo", (req, res) => {
       .get()
       .then(docQuery => {
         if (docQuery.size === 0) {
-          res.status(200).json({
-            error: false,
-            errorMessage: null,
-            data: []
-          });
+          sendResponse(res, 200, false, null, {});
         }
         let data = [];
         docQuery.forEach(doc => {
@@ -74,31 +60,19 @@ app.get("/todo", (req, res) => {
             ...doc.data()
           });
           if (data.length === docQuery.size) {
-            res.status(200).json({
-              error: false,
-              errorMessage: null,
-              data: data.sort(sortData)
-            });
+            sendResponse(res, 200, false, null, data.sort(sortData));
           }
         });
       })
       .catch(err => {
-        res.status(500).json({
-          error: true,
-          errorMessage: err,
-          data: {}
-        });
+        sendResponse(res, 500, true, err, {});
       });
   } else {
     todoRef
       .get()
       .then(docQuery => {
         if (docQuery.size === 0) {
-          res.status(200).json({
-            error: false,
-            errorMessage: null,
-            data: []
-          });
+          sendResponse(res, 200, false, null, {});
         }
         let data = [];
         docQuery.forEach(doc => {
@@ -107,20 +81,12 @@ app.get("/todo", (req, res) => {
             ...doc.data()
           });
           if (data.length === docQuery.size) {
-            res.status(200).json({
-              error: false,
-              errorMessage: null,
-              data: data.sort(sortData)
-            });
+            sendResponse(res, 200, false, null, data.sort(sortData));
           }
         });
       })
       .catch(err => {
-        res.status(500).json({
-          error: true,
-          errorMessage: err,
-          data: {}
-        });
+        sendResponse(res, 500, true, err, {});
       });
   }
 });
@@ -132,18 +98,10 @@ app.get("/todo/:id", (req, res) => {
     .doc(todoId)
     .get()
     .then(doc => {
-      res.status(200).json({
-        error: false,
-        errorMessage: null,
-        data: { id: doc.id, ...doc.data() }
-      });
+      sendResponse(res, 200, false, null, { id: doc.id, ...doc.data() });
     })
     .catch(err => {
-      res.status(500).json({
-        error: true,
-        errorMessage: err,
-        data: {}
-      });
+      sendResponse(res, 500, true, err, {});
     });
 });
 
@@ -158,18 +116,10 @@ app.put("/todo/:id", (req, res) => {
       updated_at: new Date()
     })
     .then(result => {
-      res.status(200).json({
-        error: false,
-        errorMessage: null,
-        data: { message: result.writeTime }
-      });
+      sendResponse(res, 200, false, null, { message: result.writeTime });
     })
     .catch(err => {
-      res.status(500).json({
-        error: true,
-        errorMessage: err,
-        data: {}
-      });
+      sendResponse(res, 500, true, err, {});
     });
 });
 
@@ -182,18 +132,10 @@ app.put("/todo/:id/checklist", (req, res) => {
       is_complete: true
     })
     .then(result => {
-      res.status(200).json({
-        error: false,
-        errorMessage: null,
-        data: { message: result.writeTime }
-      });
+      sendResponse(res, 200, false, null, { message: result.writeTime });
     })
     .catch(err => {
-      res.status(500).json({
-        error: true,
-        errorMessage: err,
-        data: {}
-      });
+      sendResponse(res, 500, true, err, {});
     });
 });
 
@@ -206,18 +148,10 @@ app.put("/todo/:id/unchecklist", (req, res) => {
       is_complete: false
     })
     .then(result => {
-      res.status(200).json({
-        error: false,
-        errorMessage: null,
-        data: { message: result.writeTime }
-      });
+      sendResponse(res, 200, false, null, { message: result.writeTime });
     })
     .catch(err => {
-      res.status(500).json({
-        error: true,
-        errorMessage: err,
-        data: {}
-      });
+      sendResponse(res, 500, true, err, {});
     });
 });
 
@@ -228,18 +162,10 @@ app.delete("/todo/:id", (req, res) => {
     .doc(todoId)
     .delete()
     .then(result => {
-      res.status(200).json({
-        error: false,
-        errorMessage: null,
-        data: { message: result.writeTime }
-      });
+      sendResponse(res, 200, false, null, { message: result.writeTime });
     })
     .catch(err => {
-      res.status(500).json({
-        error: true,
-        errorMessage: err,
-        data: {}
-      });
+      sendResponse(res, 500, true, err, {});
     });
 });
 
